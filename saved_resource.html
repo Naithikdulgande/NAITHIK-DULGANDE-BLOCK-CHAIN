@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<!-- saved from url=(0023)https://app.remix.live/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoinHub Mini</title>
+<script src="./saved_resource"></script>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "ethers": "https://esm.sh/ethers@6.11.1"
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./css2(1)" rel="stylesheet">
+<script>
+  window.__QUICK_DAPP_CONFIG__ = window.__QUICK_DAPP_CONFIG__ || {
+    title: "CoinHub Mini",
+    primaryContractId: "primary",
+    contracts: [
+      {
+        id: "primary",
+        alias: "primary",
+        name: "CoinHubMini",
+        address: "0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8",
+        chainId: "84532",
+        abi: [
+          {"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"enum CoinHubMini.Coin","name":"","type":"uint8"}],"name":"balances","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+          {"inputs":[{"internalType":"address","name":"user","type":"address"},{"internalType":"enum CoinHubMini.Coin","name":"coin","type":"uint8"}],"name":"getBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+          {"inputs":[{"internalType":"enum CoinHubMini.Coin","name":"coin","type":"uint8"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"getDemoCoins","outputs":[],"stateMutability":"nonpayable","type":"function"},
+          {"inputs":[{"internalType":"enum CoinHubMini.Coin","name":"coin","type":"uint8"}],"name":"price","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"pure","type":"function"},
+          {"inputs":[{"internalType":"enum CoinHubMini.Coin","name":"from","type":"uint8"},{"internalType":"enum CoinHubMini.Coin","name":"to","type":"uint8"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"swap","outputs":[],"stateMutability":"nonpayable","type":"function"}
+        ]
+      }
+    ]
+  };
+</script>
+<style>
+  :root {
+    --bg-primary: #0a0e14;
+    --bg-secondary: #0f1620;
+    --bg-tertiary: #131c2a;
+    --accent-cyan: #00f0ff;
+    --accent-green: #00ff9f;
+    --accent-purple: #7c3aed;
+    --accent-pink: #ff2e7e;
+    --text-primary: #e2e8f0;
+    --text-secondary: #64748b;
+    --border-glow: rgba(0, 240, 255, 0.15);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-primary);
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--text-primary);
+    overflow-x: hidden;
+  }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .glow-cyan { box-shadow: 0 0 20px rgba(0,240,255,0.15), inset 0 0 20px rgba(0,240,255,0.05); }
+  .glow-green { box-shadow: 0 0 20px rgba(0,255,159,0.15), inset 0 0 20px rgba(0,255,159,0.05); }
+  .glow-pink { box-shadow: 0 0 20px rgba(255,46,126,0.15), inset 0 0 20px rgba(255,46,126,0.05); }
+  .text-glow-cyan { text-shadow: 0 0 10px rgba(0,240,255,0.5); }
+  .text-glow-green { text-shadow: 0 0 10px rgba(0,255,159,0.5); }
+  .card-hover { transition: all 0.3s ease; }
+  .card-hover:hover { transform: translateY(-2px); border-color: rgba(0,240,255,0.4); }
+  .btn-tech {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+  .btn-tech::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,240,255,0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  .btn-tech:hover::before { left: 100%; }
+  .scan-line {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+    animation: scan 3s linear infinite;
+  }
+  @keyframes scan {
+    0% { transform: translateY(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(400px); opacity: 0; }
+  }
+  .pulse-dot {
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  .fade-in { animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  select option { background: var(--bg-secondary); color: var(--text-primary); }
+  input::placeholder { color: var(--text-secondary); }
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+  ::-webkit-scrollbar-thumb { background: rgba(0,240,255,0.2); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(0,240,255,0.4); }
+</style>
+<script>
+window.onerror = function(msg, url, line, col, error) {
+  try { parent.console.error('[DApp-iframe] Error:', msg, 'at', url, 'line', line); } catch(e) {}
+  try { parent.postMessage({ source: 'quickdapp-preview', type: 'runtime-error', message: String(msg), file: url || '', line: line, col: col, stack: error && error.stack || '' }, '*'); } catch(e) {}
+};
+window.addEventListener('unhandledrejection', function(e) {
+  try { parent.console.error('[DApp-iframe] Unhandled rejection:', e.reason); } catch(e2) {}
+  try {
+    var err = e.reason instanceof Error ? e.reason : null;
+    var msg = err ? err.message : String(e.reason);
+    parent.postMessage({ source: 'quickdapp-preview', type: 'runtime-error', message: msg, stack: err && err.stack || '' }, '*');
+  } catch(e2) {}
+});
+</script>
+<script>window.__QUICK_DAPP_CONFIG__={"logo":"","title":"CoinHubMini","details":"Generated by AI","contracts":[{"id":"vm-osaka:0xd8b934580fce35a11b58c6d73adee468a2833fa8","alias":"CoinHubMini","name":"CoinHubMini","address":"0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8","abi":[{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"enum CoinHubMini.Coin","name":"","type":"uint8"}],"name":"balances","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"},{"internalType":"enum CoinHubMini.Coin","name":"coin","type":"uint8"}],"name":"getBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"enum CoinHubMini.Coin","name":"coin","type":"uint8"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"getDemoCoins","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"enum CoinHubMini.Coin","name":"coin","type":"uint8"}],"name":"price","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"enum CoinHubMini.Coin","name":"from","type":"uint8"},{"internalType":"enum CoinHubMini.Coin","name":"to","type":"uint8"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"swap","outputs":[],"stateMutability":"nonpayable","type":"function"}],"chainId":"vm-osaka","networkName":"VM"}],"primaryContractId":"vm-osaka:0xd8b934580fce35a11b58c6d73adee468a2833fa8"};</script>
+
+
+<script>
+(function() {
+  if (parent.__remixVMBridge) {
+    var _listeners = {};
+    function emit(event, payload) {
+      (_listeners[event] || []).slice().forEach(function(cb) {
+        try { cb(payload); } catch (e) { setTimeout(function() { throw e; }, 0); }
+      });
+    }
+    function setAccounts(accounts, emitChange) {
+      window.ethereum.selectedAddress = accounts && accounts[0] ? accounts[0] : null;
+      if (emitChange) {
+        emit('accountsChanged', accounts || []);
+      }
+      return accounts;
+    }
+    function syncSelectedAddress(method, result) {
+      if (method === 'eth_accounts' || method === 'eth_requestAccounts') {
+        return setAccounts(result, false);
+      }
+      return result;
+    }
+    window.ethereum = {
+      isMetaMask: false,
+      isRemixVM: true,
+      _events: {},
+      request: function(args) {
+        return parent.__remixVMBridge.request(args).then(function(result) {
+          return syncSelectedAddress(args && args.method, result);
+        });
+      },
+      send: function(method, params) {
+        var requestArgs = typeof method === 'object' ? method : { method: method, params: params || [] };
+        return parent.__remixVMBridge.request(requestArgs).then(function(result) {
+          return syncSelectedAddress(requestArgs && requestArgs.method, result);
+        });
+      },
+      on: function(event, cb) {
+        if (!_listeners[event]) _listeners[event] = [];
+        _listeners[event].push(cb);
+        return this;
+      },
+      removeListener: function(event, cb) {
+        if (_listeners[event]) {
+          _listeners[event] = _listeners[event].filter(function(l) { return l !== cb; });
+        }
+        return this;
+      },
+      removeAllListeners: function() { _listeners = {}; return this; }
+    };
+    window.ethereum.chainId = '0x539';
+    window.ethereum.selectedAddress = null;
+    window.__remixVMUpdateAccounts = function(accounts) {
+      return setAccounts(accounts, true);
+    };
+  } else if (parent.__quickDappDesktopWalletBridge) {
+    var _desktopListeners = {};
+    function emitDesktopEvent(event, payload) {
+      (_desktopListeners[event] || []).slice().forEach(function(cb) {
+        try { cb(payload); } catch (e) { setTimeout(function() { throw e; }, 0); }
+      });
+    }
+    function syncDesktopProvider(method, result) {
+      if (method === 'eth_accounts' || method === 'eth_requestAccounts') {
+        window.ethereum.selectedAddress = result && result[0] ? result[0] : null;
+      }
+      if (method === 'eth_chainId') {
+        window.ethereum.chainId = result || null;
+      }
+      return result;
+    }
+    window.ethereum = {
+      isMetaMask: false,
+      isRemixDesktop: true,
+      chainId: null,
+      selectedAddress: null,
+      request: function(args) {
+        return parent.__quickDappDesktopWalletBridge.request(args).then(function(result) {
+          return syncDesktopProvider(args && args.method, result);
+        });
+      },
+      send: function(method, params) {
+        var requestArgs = typeof method === 'object' ? method : { method: method, params: params || [] };
+        return parent.__quickDappDesktopWalletBridge.request(requestArgs).then(function(result) {
+          return syncDesktopProvider(requestArgs && requestArgs.method, result);
+        });
+      },
+      on: function(event, cb) {
+        if (!_desktopListeners[event]) _desktopListeners[event] = [];
+        _desktopListeners[event].push(cb);
+        return this;
+      },
+      removeListener: function(event, cb) {
+        if (_desktopListeners[event]) {
+          _desktopListeners[event] = _desktopListeners[event].filter(function(listener) { return listener !== cb; });
+        }
+        return this;
+      },
+      removeAllListeners: function() { _desktopListeners = {}; return this; }
+    };
+    window.__quickDappDesktopWalletUpdate = function(update) {
+      if (update && update.accounts) {
+        window.ethereum.selectedAddress = update.accounts[0] || null;
+        emitDesktopEvent('accountsChanged', update.accounts);
+      }
+      if (update && update.chainId && update.chainId !== window.ethereum.chainId) {
+        window.ethereum.chainId = update.chainId;
+        emitDesktopEvent('chainChanged', update.chainId);
+      }
+      if (update && update.disconnected) {
+        window.ethereum.selectedAddress = null;
+        emitDesktopEvent('disconnect', { code: 4900, message: 'Browser Wallet disconnected.' });
+      }
+    };
+  } else if (parent.window && parent.window.ethereum) {
+    window.ethereum = parent.window.ethereum;
+  }
+})();
+</script>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}</style><style type="text/css">/* CoinHub Mini — Techy Theme */
+/* Reset & base */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0a0e14;
+  color: #e2e8f0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.mono { font-family: 'JetBrains Mono', 'Courier New', monospace; }
+
+/* Animated grid background */
+.grid-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    linear-gradient(rgba(0,240,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,240,255,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Scanline effect */
+.scanline-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanline-container::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,240,255,0.6), transparent);
+  animation: scanline 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(0); opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { transform: translateY(600px); opacity: 0; }
+}
+
+/* Glow utilities */
+.glow-cyan { box-shadow: 0 0 24px rgba(0,240,255,0.12), inset 0 0 16px rgba(0,240,255,0.03); }
+.glow-green { box-shadow: 0 0 24px rgba(0,255,159,0.12), inset 0 0 16px rgba(0,255,159,0.03); }
+.glow-pink  { box-shadow: 0 0 24px rgba(255,46,126,0.12), inset 0 0 16px rgba(255,46,126,0.03); }
+
+.text-glow-cyan { text-shadow: 0 0 12px rgba(0,240,255,0.4); }
+.text-glow-green { text-shadow: 0 0 12px rgba(0,255,159,0.4); }
+
+/* Card */
+.card {
+  background: rgba(15, 22, 32, 0.85);
+  border: 1px solid rgba(0,240,255,0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  border-color: rgba(0,240,255,0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,240,255,0.08);
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(0,255,159,0.1));
+  border: 1px solid rgba(0,240,255,0.3);
+  color: #00f0ff;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,255,159,0.2));
+  border-color: rgba(0,240,255,0.6);
+  box-shadow: 0 0 20px rgba(0,240,255,0.2);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: rgba(15, 22, 32, 0.6);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  color: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: rgba(0,240,255,0.4);
+  color: #00f0ff;
+}
+
+/* Inputs */
+.input-tech {
+  background: rgba(10, 14, 20, 0.8);
+  border: 1px solid rgba(0,240,255,0.15);
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  width: 100%;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input-tech:focus {
+  border-color: rgba(0,240,255,0.5);
+  box-shadow: 0 0 0 3px rgba(0,240,255,0.08);
+}
+
+.input-tech::placeholder { color: #475569; }
+
+select.input-tech {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f0ff' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.2em;
+  padding-right: 2.5rem;
+}
+
+select.input-tech option {
+  background: #0f1620;
+  color: #e2e8f0;
+}
+
+/* Status badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+}
+
+.status-connected {
+  background: rgba(0, 255, 159, 0.08);
+  border: 1px solid rgba(0, 255, 159, 0.3);
+  color: #00ff9f;
+}
+
+.status-disconnected {
+  background: rgba(100, 116, 139, 0.08);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  color: #64748b;
+}
+
+/* Pulse dot */
+.pulse-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  backdrop-filter: blur(12px);
+  animation: slideIn 0.3s ease;
+  max-width: 400px;
+}
+
+.toast-success {
+  background: rgba(0, 255, 159, 0.1);
+  border: 1px solid rgba(0, 255, 159, 0.3);
+  color: #00ff9f;
+}
+
+.toast-error {
+  background: rgba(255, 46, 126, 0.1);
+  border: 1px solid rgba(255, 46, 126, 0.3);
+  color: #ff2e7e;
+}
+
+.toast-info {
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: #00f0ff;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in { animation: fadeIn 0.4s ease; }
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 240, 255, 0.2);
+  border-top-color: #00f0ff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Section label */
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  background: #00f0ff;
+  border-radius: 2px;
+}
+
+/* Coin badge */
+.coin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.coin-NCG { background: rgba(0,240,255,0.08); border: 1px solid rgba(0,240,255,0.2); color: #00f0ff; }
+.coin-BTC { background: rgba(247,147,26,0.08); border: 1px solid rgba(247,147,26,0.2); color: #f7931a; }
+.coin-ETH { background: rgba(0,255,159,0.08); border: 1px solid rgba(0,255,159,0.2); color: #00ff9f; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0a0e14; }
+::-webkit-scrollbar-thumb { background: rgba(0,240,255,0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,240,255,0.35); }
+</style></head>
+<body>
+<div id="root"><div style="position: relative; min-height: 100vh; background: rgb(10, 14, 20);"><div class="grid-bg"></div><div style="position: relative; z-index: 1; max-width: 1100px; margin: 0px auto; padding: 2rem 1.5rem;"><header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2.5rem;"><div style="display: flex; align-items: center; gap: 0.85rem;"><div style="width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(0, 255, 159, 0.15)); border: 1px solid rgba(0, 240, 255, 0.3); display: flex; align-items: center; justify-content: center; box-shadow: rgba(0, 240, 255, 0.15) 0px 0px 20px;"><span class="mono" style="font-size: 1.3rem; font-weight: 700; color: rgb(0, 240, 255);">⬡</span></div><div><h1 class="mono" style="font-size: 1.4rem; font-weight: 700; color: rgb(226, 232, 240); letter-spacing: -0.02em;">CoinHubMini</h1><div class="mono" style="font-size: 0.7rem; color: rgb(100, 116, 139); letter-spacing: 0.1em; text-transform: uppercase;">Coin Swap Protocol</div></div></div><div style="display: flex; align-items: center; gap: 1rem;"><div class="status-badge status-connected fade-in"><span class="pulse-dot" style="background: rgb(0, 255, 159);"></span><span>Connected</span></div><div class="mono" style="font-size: 0.75rem; color: rgb(100, 116, 139);">0x5B38...ddC4</div></div></header><section style="margin-bottom: 2rem;"><div class="section-label"><span>Market Prices</span></div><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;"><div class="card card-hover glow-cyan fade-in" style="padding: 1.25rem; border-top: 2px solid rgba(0, 240, 255, 0.25);"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;"><div style="display: flex; align-items: center; gap: 0.5rem;"><div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 240, 255, 0.082); border: 1px solid rgba(0, 240, 255, 0.25); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: rgb(0, 240, 255);">NC</div><div><div class="mono" style="font-size: 0.9rem; font-weight: 600; color: rgb(226, 232, 240);">NCG</div><div style="font-size: 0.65rem; color: rgb(100, 116, 139);">Native Coin</div></div></div></div><div class="mono" style="font-size: 1.5rem; font-weight: 700; color: rgb(0, 240, 255); text-shadow: rgba(0, 240, 255, 0.25) 0px 0px 12px;">0.000000000000067</div><div class="mono" style="font-size: 0.65rem; color: rgb(71, 85, 105); margin-top: 0.25rem;">WEI/Unit</div></div><div class="card card-hover glow-cyan fade-in" style="padding: 1.25rem; border-top: 2px solid rgba(247, 147, 26, 0.25);"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;"><div style="display: flex; align-items: center; gap: 0.5rem;"><div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(247, 147, 26, 0.082); border: 1px solid rgba(247, 147, 26, 0.25); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: rgb(247, 147, 26);">BT</div><div><div class="mono" style="font-size: 0.9rem; font-weight: 600; color: rgb(226, 232, 240);">BTC</div><div style="font-size: 0.65rem; color: rgb(100, 116, 139);">Bitcoin</div></div></div></div><div class="mono" style="font-size: 1.5rem; font-weight: 700; color: rgb(247, 147, 26); text-shadow: rgba(247, 147, 26, 0.25) 0px 0px 12px;">0.0000000000000032</div><div class="mono" style="font-size: 0.65rem; color: rgb(71, 85, 105); margin-top: 0.25rem;">WEI/Unit</div></div><div class="card card-hover glow-cyan fade-in" style="padding: 1.25rem; border-top: 2px solid rgba(0, 255, 159, 0.25);"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;"><div style="display: flex; align-items: center; gap: 0.5rem;"><div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 255, 159, 0.082); border: 1px solid rgba(0, 255, 159, 0.25); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: rgb(0, 255, 159);">ET</div><div><div class="mono" style="font-size: 0.9rem; font-weight: 600; color: rgb(226, 232, 240);">ETH</div><div style="font-size: 0.65rem; color: rgb(100, 116, 139);">Ethereum</div></div></div></div><div class="mono" style="font-size: 1.5rem; font-weight: 700; color: rgb(0, 255, 159); text-shadow: rgba(0, 255, 159, 0.25) 0px 0px 12px;">0.0000000000098</div><div class="mono" style="font-size: 0.65rem; color: rgb(71, 85, 105); margin-top: 0.25rem;">WEI/Unit</div></div></div></section><section style="margin-bottom: 2rem;"><div class="section-label"><span>Your Balances</span><button class="btn-secondary" style="font-size: 0.65rem; padding: 0.3rem 0.8rem; margin-left: 0.5rem;">↻ Refresh</button></div><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;"><div class="card card-hover fade-in" style="padding: 1.25rem; border-left: 3px solid rgb(0, 240, 255);"><div class="mono" style="font-size: 0.7rem; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">NCG Balance</div><div class="mono" style="font-size: 1.3rem; font-weight: 600; color: rgb(226, 232, 240);">10.238805970149253731</div></div><div class="card card-hover fade-in" style="padding: 1.25rem; border-left: 3px solid rgb(247, 147, 26);"><div class="mono" style="font-size: 0.7rem; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">BTC Balance</div><div class="mono" style="font-size: 1.3rem; font-weight: 600; color: rgb(226, 232, 240);">540.2545</div></div><div class="card card-hover fade-in" style="padding: 1.25rem; border-left: 3px solid rgb(0, 255, 159);"><div class="mono" style="font-size: 0.7rem; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">ETH Balance</div><div class="mono" style="font-size: 1.3rem; font-weight: 600; color: rgb(226, 232, 240);">0.478571428573010576</div></div></div></section><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;"><section class="card scanline-container card-hover fade-in" style="padding: 1.75rem; border-color: rgba(0, 255, 159, 0.15);"><div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.25rem;"><div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(0, 255, 159, 0.08); border: 1px solid rgba(0, 255, 159, 0.2); display: flex; align-items: center; justify-content: center; font-size: 1rem;"><span style="color: rgb(0, 255, 159);">⚡</span></div><div><h2 class="mono" style="font-size: 1rem; font-weight: 600; color: rgb(226, 232, 240);">Mint Demo Coins</h2><div class="mono" style="font-size: 0.65rem; color: rgb(100, 116, 139);">Get test tokens for any coin</div></div></div><div style="display: flex; flex-direction: column; gap: 1rem;"><div><label class="mono" style="font-size: 0.7rem; color: rgb(100, 116, 139); display: block; margin-bottom: 0.4rem;">SELECT COIN</label><select class="input-tech"><option value="0">NCG — Native Coin</option><option value="1">BTC — Bitcoin</option><option value="2">ETH — Ethereum</option></select></div><div><label class="mono" style="font-size: 0.7rem; color: rgb(100, 116, 139); display: block; margin-bottom: 0.4rem;">AMOUNT</label><input type="text" class="input-tech" placeholder="1.0" value="80"></div><button class="btn-primary btn-tech" style="width: 100%; margin-top: 0.5rem;">⚡ Mint Demo Coins</button></div></section><section class="card scanline-container card-hover fade-in" style="padding: 1.75rem; border-color: rgba(0, 240, 255, 0.15);"><div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.25rem;"><div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(0, 240, 255, 0.08); border: 1px solid rgba(0, 240, 255, 0.2); display: flex; align-items: center; justify-content: center; font-size: 1rem;"><span style="color: rgb(0, 240, 255);">⇄</span></div><div><h2 class="mono" style="font-size: 1rem; font-weight: 600; color: rgb(226, 232, 240);">Swap Coins</h2><div class="mono" style="font-size: 0.65rem; color: rgb(100, 116, 139);">Exchange one coin for another</div></div></div><div style="display: flex; flex-direction: column; gap: 1rem;"><div><label class="mono" style="font-size: 0.7rem; color: rgb(100, 116, 139); display: block; margin-bottom: 0.4rem;">FROM</label><select class="input-tech"><option value="0">NCG</option><option value="1">BTC</option><option value="2">ETH</option></select></div><div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin: -0.25rem 0px;"><div style="flex: 1 1 0%; height: 1px; background: rgba(0, 240, 255, 0.1);"></div><span class="mono" style="font-size: 1.2rem; color: rgb(0, 240, 255); opacity: 0.6;">↓</span><div style="flex: 1 1 0%; height: 1px; background: rgba(0, 240, 255, 0.1);"></div></div><div><label class="mono" style="font-size: 0.7rem; color: rgb(100, 116, 139); display: block; margin-bottom: 0.4rem;">TO</label><select class="input-tech"><option value="0">NCG</option><option value="1">BTC</option><option value="2">ETH</option></select></div><div><label class="mono" style="font-size: 0.7rem; color: rgb(100, 116, 139); display: block; margin-bottom: 0.4rem;">AMOUNT</label><input type="text" class="input-tech" placeholder="1.0" value="70"></div><button class="btn-primary btn-tech" style="width: 100%; margin-top: 0.5rem;">⇄ Swap NCG → ETH</button></div></section></div><footer style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(0, 240, 255, 0.08);"><div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;"><div class="mono" style="font-size: 0.7rem; color: rgb(71, 85, 105);">CoinHubMini Contract</div><div class="mono" style="font-size: 0.7rem; color: rgb(71, 85, 105);">0xd8b93458...a2833fa8</div></div></footer></div></div></div>
+
+<script type="module">
+// local:/src/main.jsx
+import React2 from "https://esm.sh/react@18.2.0";
+import { createRoot } from "https://esm.sh/react-dom@18.2.0/client";
+
+// local:/src/App.jsx
+import React, { useState, useEffect, useCallback } from "https://esm.sh/react@18.2.0";
+import { ethers } from "https://esm.sh/ethers@6.11.1";
+var COINS = [
+  { id: 0, name: "NCG", symbol: "NCG", color: "#00f0ff", desc: "Native Coin" },
+  { id: 1, name: "BTC", symbol: "BTC", color: "#f7931a", desc: "Bitcoin" },
+  { id: 2, name: "ETH", symbol: "ETH", color: "#00ff9f", desc: "Ethereum" }
+];
+var COIN_NAMES = ["NCG", "BTC", "ETH"];
+function formatAmount(val) {
+  if (val === null || val === void 0) return "\u2014";
+  try {
+    return ethers.formatEther(val);
+  } catch {
+    return String(val);
+  }
+}
+function App() {
+  const config = window.__QUICK_DAPP_CONFIG__ || {};
+  const dappTitle = config.title || "CoinHub Mini";
+  const [provider, setProvider] = useState(null);
+  const [signer, setSigner] = useState(null);
+  const [contract, setContract] = useState(null);
+  const [account, setAccount] = useState(null);
+  const [connected, setConnected] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+  const [error, setError] = useState(null);
+  const [configError, setConfigError] = useState(null);
+  const [balances, setBalances] = useState({ 0: null, 1: null, 2: null });
+  const [prices, setPrices] = useState({ 0: null, 1: null, 2: null });
+  const [loadingBalances, setLoadingBalances] = useState(false);
+  const [loadingPrices, setLoadingPrices] = useState(false);
+  const [demoCoin, setDemoCoin] = useState(0);
+  const [demoAmount, setDemoAmount] = useState("1.0");
+  const [demoLoading, setDemoLoading] = useState(false);
+  const [swapFrom, setSwapFrom] = useState(0);
+  const [swapTo, setSwapTo] = useState(1);
+  const [swapAmount, setSwapAmount] = useState("1.0");
+  const [swapLoading, setSwapLoading] = useState(false);
+  const [toast, setToast] = useState(null);
+  const showToast = useCallback((msg, type) => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 5e3);
+  }, []);
+  useEffect(() => {
+    if (!config.contracts || !config.contracts.length) {
+      setConfigError("No contract bindings found in DApp configuration.");
+      return;
+    }
+    const binding = config.contracts.find(
+      (c) => c.id === config.primaryContractId
+    ) || config.contracts[0];
+    if (!binding || !binding.address || !binding.abi) {
+      setConfigError("Missing contract address or ABI in configuration.");
+      return;
+    }
+    window.__COINHUB_BINDING__ = binding;
+  }, [config]);
+  useEffect(() => {
+    if (!window.ethereum) {
+      setError("No Ethereum provider found. The Remix VM preview should provide one.");
+      return;
+    }
+    connectWallet();
+  }, []);
+  useEffect(() => {
+    if (!window.ethereum) return;
+    const handleAccountsChanged = (accounts) => {
+      if (accounts && accounts.length > 0) {
+        setAccount(accounts[0]);
+        refreshContractInstance(accounts[0]);
+      } else {
+        setAccount(null);
+        setConnected(false);
+        setSigner(null);
+        setContract(null);
+      }
+    };
+    window.ethereum.on?.("accountsChanged", handleAccountsChanged);
+    return () => {
+      window.ethereum.removeListener?.("accountsChanged", handleAccountsChanged);
+    };
+  }, []);
+  const refreshContractInstance = useCallback(async (acct) => {
+    if (!window.ethereum || !window.__COINHUB_BINDING__) return;
+    try {
+      const prov = new ethers.BrowserProvider(window.ethereum);
+      const sig = await prov.getSigner();
+      const ctr = new ethers.Contract(
+        window.__COINHUB_BINDING__.address,
+        window.__COINHUB_BINDING__.abi,
+        sig
+      );
+      setProvider(prov);
+      setSigner(sig);
+      setContract(ctr);
+      setAccount(acct);
+      setConnected(true);
+    } catch (e) {
+      console.error("Failed to refresh contract instance:", e);
+    }
+  }, []);
+  const connectWallet = async () => {
+    if (!window.ethereum || !window.__COINHUB_BINDING__) {
+      setError("No provider or contract binding available.");
+      return;
+    }
+    setConnecting(true);
+    setError(null);
+    try {
+      const prov = new ethers.BrowserProvider(window.ethereum);
+      await prov.send("eth_requestAccounts", []);
+      const sig = await prov.getSigner();
+      const acct = await sig.getAddress();
+      const ctr = new ethers.Contract(
+        window.__COINHUB_BINDING__.address,
+        window.__COINHUB_BINDING__.abi,
+        sig
+      );
+      setProvider(prov);
+      setSigner(sig);
+      setContract(ctr);
+      setAccount(acct);
+      setConnected(true);
+    } catch (e) {
+      console.error("Connection failed:", e);
+      setError(e.shortMessage || e.message || "Failed to connect wallet");
+    } finally {
+      setConnecting(false);
+    }
+  };
+  const loadPrices = useCallback(async () => {
+    if (!contract) return;
+    setLoadingPrices(true);
+    try {
+      const p0 = await contract.price(0);
+      const p1 = await contract.price(1);
+      const p2 = await contract.price(2);
+      setPrices({ 0: p0, 1: p1, 2: p2 });
+    } catch (e) {
+      console.error("Failed to load prices:", e);
+      showToast("Failed to load prices", "error");
+    } finally {
+      setLoadingPrices(false);
+    }
+  }, [contract, showToast]);
+  const loadBalances = useCallback(async () => {
+    if (!contract || !account) return;
+    setLoadingBalances(true);
+    try {
+      const b0 = await contract.getBalance(account, 0);
+      const b1 = await contract.getBalance(account, 1);
+      const b2 = await contract.getBalance(account, 2);
+      setBalances({ 0: b0, 1: b1, 2: b2 });
+    } catch (e) {
+      console.error("Failed to load balances:", e);
+      showToast("Failed to load balances", "error");
+    } finally {
+      setLoadingBalances(false);
+    }
+  }, [contract, account, showToast]);
+  useEffect(() => {
+    if (contract) {
+      loadPrices();
+      if (account) loadBalances();
+    }
+  }, [contract, account, loadPrices, loadBalances]);
+  const handleGetDemoCoins = async () => {
+    if (!contract) return;
+    setDemoLoading(true);
+    try {
+      const amountWei = ethers.parseEther(demoAmount || "0");
+      if (amountWei <= 0n) {
+        showToast("Amount must be positive", "error");
+        setDemoLoading(false);
+        return;
+      }
+      const tx = await contract.getDemoCoins(demoCoin, amountWei);
+      showToast(`Transaction submitted: ${tx.hash.slice(0, 18)}...`, "info");
+      await tx.wait();
+      showToast(`Minted ${demoAmount} ${COIN_NAMES[demoCoin]} demo coins!`, "success");
+      loadBalances();
+    } catch (e) {
+      console.error("getDemoCoins failed:", e);
+      showToast(e.shortMessage || e.reason || e.message || "Transaction failed", "error");
+    } finally {
+      setDemoLoading(false);
+    }
+  };
+  const handleSwap = async () => {
+    if (!contract) return;
+    if (swapFrom === swapTo) {
+      showToast("Choose different coins to swap", "error");
+      return;
+    }
+    setSwapLoading(true);
+    try {
+      const amountWei = ethers.parseEther(swapAmount || "0");
+      if (amountWei <= 0n) {
+        showToast("Amount must be positive", "error");
+        setSwapLoading(false);
+        return;
+      }
+      const tx = await contract.swap(swapFrom, swapTo, amountWei);
+      showToast(`Swap submitted: ${tx.hash.slice(0, 18)}...`, "info");
+      await tx.wait();
+      showToast(`Swapped ${swapAmount} ${COIN_NAMES[swapFrom]} \u2192 ${COIN_NAMES[swapTo]}!`, "success");
+      loadBalances();
+    } catch (e) {
+      console.error("swap failed:", e);
+      showToast(e.shortMessage || e.reason || e.message || "Swap failed", "error");
+    } finally {
+      setSwapLoading(false);
+    }
+  };
+  if (configError) {
+    return /* @__PURE__ */ React.createElement("div", { className: "min-h-screen flex items-center justify-center p-8", style: { background: "#0a0e14" } }, /* @__PURE__ */ React.createElement("div", { className: "card glow-pink p-8 max-w-md text-center", style: { borderColor: "rgba(255,46,126,0.3)" } }, /* @__PURE__ */ React.createElement("div", { className: "text-4xl mb-4 mono" }, "\u26A0"), /* @__PURE__ */ React.createElement("h2", { className: "text-xl font-bold mb-2", style: { color: "#ff2e7e" } }, "Configuration Error"), /* @__PURE__ */ React.createElement("p", { className: "text-sm", style: { color: "#94a3b8" } }, configError)));
+  }
+  return /* @__PURE__ */ React.createElement("div", { style: { position: "relative", minHeight: "100vh", background: "#0a0e14" } }, /* @__PURE__ */ React.createElement("div", { className: "grid-bg" }), /* @__PURE__ */ React.createElement("div", { style: { position: "relative", zIndex: 1, maxWidth: "1100px", margin: "0 auto", padding: "2rem 1.5rem" } }, /* @__PURE__ */ React.createElement("header", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "2.5rem" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "0.85rem" } }, /* @__PURE__ */ React.createElement("div", { style: {
+    width: "44px",
+    height: "44px",
+    borderRadius: "10px",
+    background: "linear-gradient(135deg, rgba(0,240,255,0.15), rgba(0,255,159,0.15))",
+    border: "1px solid rgba(0,240,255,0.3)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 0 20px rgba(0,240,255,0.15)"
+  } }, /* @__PURE__ */ React.createElement("span", { className: "mono", style: { fontSize: "1.3rem", fontWeight: 700, color: "#00f0ff" } }, "\u2B21")), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h1", { className: "mono", style: { fontSize: "1.4rem", fontWeight: 700, color: "#e2e8f0", letterSpacing: "-0.02em" } }, dappTitle), /* @__PURE__ */ React.createElement("div", { className: "mono", style: { fontSize: "0.7rem", color: "#64748b", letterSpacing: "0.1em", textTransform: "uppercase" } }, "Coin Swap Protocol"))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "1rem" } }, connected ? /* @__PURE__ */ React.createElement("div", { className: "status-badge status-connected fade-in" }, /* @__PURE__ */ React.createElement("span", { className: "pulse-dot", style: { background: "#00ff9f" } }), /* @__PURE__ */ React.createElement("span", null, "Connected")) : /* @__PURE__ */ React.createElement("div", { className: "status-badge status-disconnected" }, /* @__PURE__ */ React.createElement("span", { className: "pulse-dot", style: { background: "#64748b" } }), /* @__PURE__ */ React.createElement("span", null, "Disconnected")), connected && account && /* @__PURE__ */ React.createElement("div", { className: "mono", style: { fontSize: "0.75rem", color: "#64748b" } }, account.slice(0, 6), "...", account.slice(-4)))), error && /* @__PURE__ */ React.createElement("div", { className: "card glow-pink fade-in", style: { borderColor: "rgba(255,46,126,0.3)", padding: "1rem 1.5rem", marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.75rem" } }, /* @__PURE__ */ React.createElement("span", { style: { color: "#ff2e7e", fontSize: "1.1rem" } }, "\u26A0"), /* @__PURE__ */ React.createElement("span", { className: "mono", style: { fontSize: "0.8rem", color: "#ff2e7e" } }, error)), /* @__PURE__ */ React.createElement("section", { style: { marginBottom: "2rem" } }, /* @__PURE__ */ React.createElement("div", { className: "section-label" }, /* @__PURE__ */ React.createElement("span", null, "Market Prices"), loadingPrices && /* @__PURE__ */ React.createElement("span", { className: "spinner", style: { width: "12px", height: "12px" } })), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" } }, COINS.map((coin) => /* @__PURE__ */ React.createElement("div", { key: coin.id, className: "card card-hover glow-cyan fade-in", style: { padding: "1.25rem", borderTop: `2px solid ${coin.color}40` } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "0.5rem" } }, /* @__PURE__ */ React.createElement("div", { style: {
+    width: "32px",
+    height: "32px",
+    borderRadius: "50%",
+    background: `${coin.color}15`,
+    border: `1px solid ${coin.color}40`,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "0.7rem",
+    fontWeight: 700,
+    color: coin.color
+  } }, coin.symbol.slice(0, 2)), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { className: "mono", style: { fontSize: "0.9rem", fontWeight: 600, color: "#e2e8f0" } }, coin.symbol), /* @__PURE__ */ React.createElement("div", { style: { fontSize: "0.65rem", color: "#64748b" } }, coin.desc)))), /* @__PURE__ */ React.createElement("div", { className: "mono", style: { fontSize: "1.5rem", fontWeight: 700, color: coin.color, textShadow: `0 0 12px ${coin.color}40` } }, prices[coin.id] !== null ? ethers.formatEther(prices[coin.id]) : "\u2014"), /* @__PURE__ */ React.createElement("div", { className: "mono", style: { fontSize: "0.65rem", color: "#475569", marginTop: "0.25rem" } }, "WEI/Unit"))))), connected && account && /* @__PURE__ */ React.createElement("section", { style: { marginBottom: "2rem" } }, /* @__PURE__ */ React.createElement("div", { className: "section-label" }, /* @__PURE__ */ React.createElement("span", null, "Your Balances"), /* @__PURE__ */ React.createElement("button", { onClick: loadBalances, className: "btn-secondary", style: { fontSize: "0.65rem", padding: "0.3rem 0.8rem", marginLeft: "0.5rem" }, disabled: loadingBalances }, loadingBalances ? "\u27F3 Loading..." : "\u21BB Refresh")), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" } }, COINS.map((coin) => /* @__PURE__ */ React.createElement("div", { key: coin.id, className: "card card-hover fade-in", style: { padding: "1.25rem", borderLeft: `3px solid ${coin.color}` } }, /* @__PURE__ */ React.createElement("div", { className: "mono", style: { fontSize: "0.7rem", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "0.5rem" } }, coin.symbol, " Balance"), /* @__PURE__ */ React.createElement("div", { className: "mono", style: { fontSize: "1.3rem", fontWeight: 600, color: "#e2e8f0" } }, balances[coin.id] !== null ? formatAmount(balances[coin.id]) : "\u2014"))))), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(380px, 1fr))", gap: "1.5rem", marginBottom: "2rem" } }, /* @__PURE__ */ React.createElement("section", { className: "card scanline-container card-hover fade-in", style: { padding: "1.75rem", borderColor: "rgba(0,255,159,0.15)" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "1.25rem" } }, /* @__PURE__ */ React.createElement("div", { style: {
+    width: "36px",
+    height: "36px",
+    borderRadius: "8px",
+    background: "rgba(0,255,159,0.08)",
+    border: "1px solid rgba(0,255,159,0.2)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "1rem"
+  } }, /* @__PURE__ */ React.createElement("span", { style: { color: "#00ff9f" } }, "\u26A1")), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", { className: "mono", style: { fontSize: "1rem", fontWeight: 600, color: "#e2e8f0" } }, "Mint Demo Coins"), /* @__PURE__ */ React.createElement("div", { className: "mono", style: { fontSize: "0.65rem", color: "#64748b" } }, "Get test tokens for any coin"))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "1rem" } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("label", { className: "mono", style: { fontSize: "0.7rem", color: "#64748b", display: "block", marginBottom: "0.4rem" } }, "SELECT COIN"), /* @__PURE__ */ React.createElement(
+    "select",
+    {
+      className: "input-tech",
+      value: demoCoin,
+      onChange: (e) => setDemoCoin(parseInt(e.target.value))
+    },
+    COINS.map((c) => /* @__PURE__ */ React.createElement("option", { key: c.id, value: c.id }, c.symbol, " \u2014 ", c.desc))
+  )), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("label", { className: "mono", style: { fontSize: "0.7rem", color: "#64748b", display: "block", marginBottom: "0.4rem" } }, "AMOUNT"), /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      className: "input-tech",
+      value: demoAmount,
+      onChange: (e) => setDemoAmount(e.target.value),
+      placeholder: "1.0"
+    }
+  )), /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      className: "btn-primary btn-tech",
+      onClick: handleGetDemoCoins,
+      disabled: demoLoading || !connected,
+      style: { width: "100%", marginTop: "0.5rem" }
+    },
+    demoLoading ? /* @__PURE__ */ React.createElement("span", { style: { display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" } }, /* @__PURE__ */ React.createElement("span", { className: "spinner" }), " Processing...") : "\u26A1 Mint Demo Coins"
+  ))), /* @__PURE__ */ React.createElement("section", { className: "card scanline-container card-hover fade-in", style: { padding: "1.75rem", borderColor: "rgba(0,240,255,0.15)" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "1.25rem" } }, /* @__PURE__ */ React.createElement("div", { style: {
+    width: "36px",
+    height: "36px",
+    borderRadius: "8px",
+    background: "rgba(0,240,255,0.08)",
+    border: "1px solid rgba(0,240,255,0.2)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "1rem"
+  } }, /* @__PURE__ */ React.createElement("span", { style: { color: "#00f0ff" } }, "\u21C4")), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h2", { className: "mono", style: { fontSize: "1rem", fontWeight: 600, color: "#e2e8f0" } }, "Swap Coins"), /* @__PURE__ */ React.createElement("div", { className: "mono", style: { fontSize: "0.65rem", color: "#64748b" } }, "Exchange one coin for another"))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: "1rem" } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("label", { className: "mono", style: { fontSize: "0.7rem", color: "#64748b", display: "block", marginBottom: "0.4rem" } }, "FROM"), /* @__PURE__ */ React.createElement(
+    "select",
+    {
+      className: "input-tech",
+      value: swapFrom,
+      onChange: (e) => setSwapFrom(parseInt(e.target.value))
+    },
+    COINS.map((c) => /* @__PURE__ */ React.createElement("option", { key: c.id, value: c.id }, c.symbol))
+  )), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem", margin: "-0.25rem 0" } }, /* @__PURE__ */ React.createElement("div", { style: { flex: 1, height: "1px", background: "rgba(0,240,255,0.1)" } }), /* @__PURE__ */ React.createElement("span", { className: "mono", style: { fontSize: "1.2rem", color: "#00f0ff", opacity: 0.6 } }, "\u2193"), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, height: "1px", background: "rgba(0,240,255,0.1)" } })), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("label", { className: "mono", style: { fontSize: "0.7rem", color: "#64748b", display: "block", marginBottom: "0.4rem" } }, "TO"), /* @__PURE__ */ React.createElement(
+    "select",
+    {
+      className: "input-tech",
+      value: swapTo,
+      onChange: (e) => setSwapTo(parseInt(e.target.value))
+    },
+    COINS.map((c) => /* @__PURE__ */ React.createElement("option", { key: c.id, value: c.id }, c.symbol))
+  )), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("label", { className: "mono", style: { fontSize: "0.7rem", color: "#64748b", display: "block", marginBottom: "0.4rem" } }, "AMOUNT"), /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "text",
+      className: "input-tech",
+      value: swapAmount,
+      onChange: (e) => setSwapAmount(e.target.value),
+      placeholder: "1.0"
+    }
+  )), swapFrom === swapTo && /* @__PURE__ */ React.createElement("div", { className: "mono", style: { fontSize: "0.7rem", color: "#ff2e7e", textAlign: "center" } }, "\u26A0 Select different coins to swap"), /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      className: "btn-primary btn-tech",
+      onClick: handleSwap,
+      disabled: swapLoading || !connected || swapFrom === swapTo,
+      style: { width: "100%", marginTop: "0.5rem" }
+    },
+    swapLoading ? /* @__PURE__ */ React.createElement("span", { style: { display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" } }, /* @__PURE__ */ React.createElement("span", { className: "spinner" }), " Swapping...") : `\u21C4 Swap ${COIN_NAMES[swapFrom]} \u2192 ${COIN_NAMES[swapTo]}`
+  )))), /* @__PURE__ */ React.createElement("footer", { style: { marginTop: "2rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(0,240,255,0.08)" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" } }, /* @__PURE__ */ React.createElement("div", { className: "mono", style: { fontSize: "0.7rem", color: "#475569" } }, "CoinHubMini Contract"), /* @__PURE__ */ React.createElement("div", { className: "mono", style: { fontSize: "0.7rem", color: "#475569" } }, window.__COINHUB_BINDING__?.address ? `${window.__COINHUB_BINDING__.address.slice(0, 10)}...${window.__COINHUB_BINDING__.address.slice(-8)}` : "\u2014")))), toast && /* @__PURE__ */ React.createElement("div", { className: `toast toast-${toast.type}` }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "flex-start", gap: "0.6rem" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: "1rem", flexShrink: 0 } }, toast.type === "success" ? "\u2713" : toast.type === "error" ? "\u2715" : "\u2139"), /* @__PURE__ */ React.createElement("span", null, toast.msg))));
+}
+
+// local:/src/index.css
+try {
+  const css = `/* CoinHub Mini \u2014 Techy Theme */
+/* Reset & base */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0a0e14;
+  color: #e2e8f0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.mono { font-family: 'JetBrains Mono', 'Courier New', monospace; }
+
+/* Animated grid background */
+.grid-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    linear-gradient(rgba(0,240,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,240,255,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Scanline effect */
+.scanline-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanline-container::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,240,255,0.6), transparent);
+  animation: scanline 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(0); opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { transform: translateY(600px); opacity: 0; }
+}
+
+/* Glow utilities */
+.glow-cyan { box-shadow: 0 0 24px rgba(0,240,255,0.12), inset 0 0 16px rgba(0,240,255,0.03); }
+.glow-green { box-shadow: 0 0 24px rgba(0,255,159,0.12), inset 0 0 16px rgba(0,255,159,0.03); }
+.glow-pink  { box-shadow: 0 0 24px rgba(255,46,126,0.12), inset 0 0 16px rgba(255,46,126,0.03); }
+
+.text-glow-cyan { text-shadow: 0 0 12px rgba(0,240,255,0.4); }
+.text-glow-green { text-shadow: 0 0 12px rgba(0,255,159,0.4); }
+
+/* Card */
+.card {
+  background: rgba(15, 22, 32, 0.85);
+  border: 1px solid rgba(0,240,255,0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  border-color: rgba(0,240,255,0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,240,255,0.08);
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(0,255,159,0.1));
+  border: 1px solid rgba(0,240,255,0.3);
+  color: #00f0ff;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(0,255,159,0.2));
+  border-color: rgba(0,240,255,0.6);
+  box-shadow: 0 0 20px rgba(0,240,255,0.2);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: rgba(15, 22, 32, 0.6);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  color: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: rgba(0,240,255,0.4);
+  color: #00f0ff;
+}
+
+/* Inputs */
+.input-tech {
+  background: rgba(10, 14, 20, 0.8);
+  border: 1px solid rgba(0,240,255,0.15);
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  width: 100%;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input-tech:focus {
+  border-color: rgba(0,240,255,0.5);
+  box-shadow: 0 0 0 3px rgba(0,240,255,0.08);
+}
+
+.input-tech::placeholder { color: #475569; }
+
+select.input-tech {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f0ff' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.2em;
+  padding-right: 2.5rem;
+}
+
+select.input-tech option {
+  background: #0f1620;
+  color: #e2e8f0;
+}
+
+/* Status badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+}
+
+.status-connected {
+  background: rgba(0, 255, 159, 0.08);
+  border: 1px solid rgba(0, 255, 159, 0.3);
+  color: #00ff9f;
+}
+
+.status-disconnected {
+  background: rgba(100, 116, 139, 0.08);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  color: #64748b;
+}
+
+/* Pulse dot */
+.pulse-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  backdrop-filter: blur(12px);
+  animation: slideIn 0.3s ease;
+  max-width: 400px;
+}
+
+.toast-success {
+  background: rgba(0, 255, 159, 0.1);
+  border: 1px solid rgba(0, 255, 159, 0.3);
+  color: #00ff9f;
+}
+
+.toast-error {
+  background: rgba(255, 46, 126, 0.1);
+  border: 1px solid rgba(255, 46, 126, 0.3);
+  color: #ff2e7e;
+}
+
+.toast-info {
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: #00f0ff;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in { animation: fadeIn 0.4s ease; }
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 240, 255, 0.2);
+  border-top-color: #00f0ff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Section label */
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  background: #00f0ff;
+  border-radius: 2px;
+}
+
+/* Coin badge */
+.coin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.coin-NCG { background: rgba(0,240,255,0.08); border: 1px solid rgba(0,240,255,0.2); color: #00f0ff; }
+.coin-BTC { background: rgba(247,147,26,0.08); border: 1px solid rgba(247,147,26,0.2); color: #f7931a; }
+.coin-ETH { background: rgba(0,255,159,0.08); border: 1px solid rgba(0,255,159,0.2); color: #00ff9f; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0a0e14; }
+::-webkit-scrollbar-thumb { background: rgba(0,240,255,0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,240,255,0.35); }
+`;
+  if (typeof css === "string" && css.trim().length > 0) {
+    const style = document.createElement("style");
+    style.type = "text/css";
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+  }
+} catch (e) {
+  console.error("Failed to inject CSS for /src/index.css", e);
+}
+
+// local:/src/main.jsx
+var root = createRoot(document.getElementById("root"));
+root.render(React2.createElement(App));
+
+</script>
+
+
+
+</body></html>
